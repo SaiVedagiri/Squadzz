@@ -7,11 +7,11 @@ import 'package:squadzz/pages/sign_up.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
-  runApp(const HoloLensApp());
+  runApp(const SquadzzApp());
 }
 
-class HoloLensApp extends StatelessWidget {
-  const HoloLensApp({super.key});
+class SquadzzApp extends StatelessWidget {
+  const SquadzzApp({super.key});
 
   @override
   Widget build(BuildContext context) {
