@@ -1,16 +1,15 @@
 from transformers import pipeline
-import requests
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-def get_place_ids_from_latlon(lat, lon, radius='', type='', kwd=''):
+def get_place_ids_from_latlon(lat, lon, radius=500, type='', kwd=''):
     params = {
         'location' : '{},{}'.format(lat, lon),
-        'key' : os.getenv('PENNAPPS_GOOGLE_API_KEY')
+        'key' : os.getenv('PENNAPPS_GOOGLE_API_KEY'), 
+        'radius' : radius
     }
-    if radius != '':
-        params['radius'] = radius
+
     if type != '':
         params['type'] = type
     if kwd != '':
