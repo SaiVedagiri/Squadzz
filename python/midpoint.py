@@ -2,6 +2,8 @@ import os
 import requests
 import math
 from dotenv import load_dotenv
+from global_land_mask import globe
+import numpy as np
 
 load_dotenv()
 KANSAS="Lebanon, Kansas"
@@ -30,8 +32,14 @@ def getDistanceMatrix(origins: list[str], destinations: list[str]) -> dict:
 
     return resp
 
+def coorInOcean(coord: tuple) -> bool:
+
+    is_on_land = globe.is_land(coord[0], coord[1])
+    return not is_on_land
+
 
 def getDistance(point1: tuple, point2: tuple) -> float:
+
     lat1, lng1, lat2, lng2 = point1[0], point1[1], point2[0], point2[1]
 
     dLat = lat2 * math.pi / 180 - lat1 * math.pi / 180
@@ -50,6 +58,7 @@ def findMidpoint(addresses: list[str], coords: list[tuple]) -> str:
     midpoint = (sum(lat)/len(lat), sum(lng)/len(lng))
 
     return midpoint, getAddress(midpoint)
+
 
 
 if __name__ == "__main__":
