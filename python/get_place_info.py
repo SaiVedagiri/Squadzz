@@ -29,12 +29,13 @@ def get_info_from_id(id):
     name = results['result']['name']
     info = {}
     reviews = []
-    for rev in results['result']['reviews']:
-        rating_review = {}
-        rating_review['rating'] = rev['rating']
-        rating_review['review'] = rev['text']
-        reviews.append(rating_review)
-    info['reviews'] = reviews
+    if 'reviews' in results['result']:
+        for rev in results['result']['reviews']:
+            rating_review = {}
+            rating_review['rating'] = rev['rating']
+            rating_review['review'] = rev['text']
+            reviews.append(rating_review)
+        info['reviews'] = reviews
 
     # add other fields
     for f in ret_fields[:-1]:

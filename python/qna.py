@@ -24,8 +24,9 @@ def qna(question, info_dict_path, model):
         info_dict = json.load(file)
 
     context = ''
-    for review in info_dict['reviews']:
-        context += review['review'] + ' '
+    if 'reviews' in info_dict:
+        for review in info_dict['reviews']:
+            context += review['review'] + ' '
 
     other_info = ''
     info_fields = set(['delivery', 'dine in', 'reservable', 'serves breakfast', 'serves brunch', 'serves dinner', 'serves lunch', 'serves vegetarian food', 'takeout'])
