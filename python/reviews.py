@@ -1,3 +1,4 @@
+import requests
 from transformers import pipeline
 import os
 from dotenv import load_dotenv
