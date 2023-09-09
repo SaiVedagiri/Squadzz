@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../helpers/hex_color.dart';
+import 'package:squadzz/pages/group_create.dart';
 
 String userID = "";
 List<dynamic> displayList = [];
@@ -55,7 +54,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 )
               ]);
         });
@@ -74,7 +73,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 )
               ]);
         });
@@ -100,8 +99,9 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                           "Content-type": "application/json",
                           "Origin": "*",
                         },
-                        body: jsonEncode({"user_id": userID}));
+                        body: jsonEncode({"userID": userID}));
                 var responseJSON = jsonDecode(response.body);
+                print(responseJSON);
                 setState(() {
                   displayList = responseJSON["groups"];
                 });
@@ -135,9 +135,13 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const GroupCreatePage()));
           // Add your onPressed code here!
         },
-        child: Icon(Icons.chat),
+        child: const Icon(Icons.chat),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(

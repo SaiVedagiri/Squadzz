@@ -45,7 +45,7 @@ express()
       database.ref("users").push({
         email: email,
         password: "",
-        name: name
+        name: name,
       });
     }
     myVal = await database
@@ -175,7 +175,7 @@ express()
       const value = {
         email: email,
         password: hash(password),
-        name: `${firstName} ${lastName}`
+        name: `${firstName} ${lastName}`,
       };
       database.ref("users").push(value);
       myVal = await database
@@ -207,14 +207,16 @@ express()
     myVal = myVal.val();
     retVal = [];
 
-    for (groupID in myVal) {
-      let groupName = await database
-        .ref(`groups/${groupID}/name`)
-        .once("value");
-      retVal.push({
-        id: groupID,
-        name: groupName,
-      });
+    if (myVal) {
+      for (groupID of myVal) {
+        let groupName = await database
+          .ref(`groups/${groupID}/name`)
+          .once("value");
+        retVal.push({
+          id: groupID,
+          name: groupName,
+        });
+      }
     }
 
     res.send({
@@ -261,22 +263,44 @@ express()
       users: [userID],
     };
 
-    let retVal = {};
-
-    database.ref("groups").push(value).then((snapshot) => {
-        retVal.key = snapshot.key;
-    });
-
-    let myVal = await database.ref(`users/${userID}/groups`).once("value");
-    myVal = myVal.val();
-
-    if (myVal == null){
-        database.ref(`users/${userID}/groups`).set([retVal.key]);
-    } else{
-        myVal.push(retVal.key);
-        database.ref(`users/${userID}/groups`).set(myVal);
+    for (member in memberInfo) {
+      let myVal = await database
+        .ref(`users`)
+        .orderByChild("email")
+        .equalTo(memberInfo[member])
+        .once("value");
+      myVal = myVal.val();
+      if (myVal == null) {
+        res.sendStatus(400);
+        return;
+      } else {
+        for (key in myVal) {
+          value.users.push(key);
+        }
+      }
     }
 
-    res.send(retVal);
+    let newKey = "";
+
+    database
+      .ref("groups")
+      .push(value)
+      .then((snapshot) => {
+        newKey = snapshot.key;
+      });
+
+    for (userID of value.users) {
+      let myVal = await database.ref(`users/${userID}/groups`).once("value");
+      myVal = myVal.val();
+
+      if (myVal == null) {
+        database.ref(`users/${userID}/groups`).set([newKey]);
+      } else {
+        myVal.push(newKey);
+        database.ref(`users/${userID}/groups`).set(myVal);
+      }
+    }
+
+    res.sendStatus(200);
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));

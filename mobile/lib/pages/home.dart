@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:squadzz/helpers/hex_color.dart';
 import 'package:squadzz/pages/sign_in.dart';
 import 'package:squadzz/pages/sign_up.dart';
 import 'dart:async';

@@ -198,7 +198,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           }));
                       //createAlertDialog(context);
                       var userJSON = jsonDecode(response.body);
-                      print(userJSON);
                       if (userJSON["success"]) {
                         var userID = userJSON["data"];
                         var prefs = await SharedPreferences.getInstance();
