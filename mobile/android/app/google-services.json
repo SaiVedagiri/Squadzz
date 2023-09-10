@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "644462782738",
+    "firebase_url": "https://squadzz-default-rtdb.firebaseio.com",
+    "project_id": "squadzz",
+    "storage_bucket": "squadzz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644462782738:android:3cd0f05adb9b8b203aebcb",
+        "android_client_info": {
+          "package_name": "us.squadzz.squadzz.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644462782738-gvpj9h2q3qiedopaosu8atsf2h7cco6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "us.squadzz.squadzz.mobile",
+            "certificate_hash": "71dfecfa8beaf54cb55edf437da3e46484f20475"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl8-ilGuDuH4dnqsT8pO9AGCUSEGsvNbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

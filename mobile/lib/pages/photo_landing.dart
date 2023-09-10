@@ -151,7 +151,7 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final List<XFile>? image = await picker?.pickMultiImage();
+          final List<XFile>? images = await picker?.pickMultiImage();
         },
         child: const Icon(Icons.upload),
       ),
@@ -162,7 +162,7 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
             const SizedBox(
               height: 40,
             ),
-            Text(
+            const Text(
               'Gallery',
               style: TextStyle(
                 fontSize: 25,
@@ -171,16 +171,16 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 30,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),

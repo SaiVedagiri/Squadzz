@@ -19,10 +19,6 @@ allprojects {
     }
 }
 
-plugins {
-  id 'com.google.gms.google-services' version '4.3.15' apply false
-}
-
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"

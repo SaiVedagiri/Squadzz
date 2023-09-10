@@ -341,11 +341,16 @@ express()
     let userID = info.userID;
     let tripName = info.tripName;
     let memberInfo = info.memberInfo;
-    let groupIDs = info.groupIDs;
+    let groupID = info.groupID;
+
+    let myVal = await database
+        .ref(`groups/${groupID}`)
+        .once("value");
+    myVal = myVal.val();
 
     const value = {
-      name: groupName,
-      users: [userID],
+      name: tripName,
+      users: myVal.users,
     };
 
     for (member in memberInfo) {
@@ -368,21 +373,21 @@ express()
     let newKey = "";
 
     database
-      .ref("groups")
+      .ref("trips")
       .push(value)
       .then((snapshot) => {
         newKey = snapshot.key;
       });
 
     for (userID of value.users) {
-      let myVal = await database.ref(`users/${userID}/groups`).once("value");
+      let myVal = await database.ref(`users/${userID}/trips`).once("value");
       myVal = myVal.val();
 
       if (myVal == null) {
-        database.ref(`users/${userID}/groups`).set([newKey]);
+        database.ref(`users/${userID}/trips`).set([newKey]);
       } else {
         myVal.push(newKey);
-        database.ref(`users/${userID}/groups`).set(myVal);
+        database.ref(`users/${userID}/trips`).set(myVal);
       }
     }
 

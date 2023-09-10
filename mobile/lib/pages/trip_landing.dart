@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:squadzz/pages/trip_create.dart';
 // import 'package:squadzz/pages/trip_create.dart';
 
 String userID = "";
@@ -133,8 +134,8 @@ class _TripLandingPageState extends State<TripLandingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => const TripCreatePage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const TripCreatePage()));
         },
         child: const Icon(Icons.add),
       ),
@@ -195,7 +196,7 @@ class _TripLandingPageState extends State<TripLandingPage> {
                         //             tripID: displayList[index]["id"])));
                       },
                       title: Text(displayList[index]["name"]!),
-                      subtitle: const Text("Details")),
+                      subtitle: const Text("Location")),
                 ));
           }),
     );

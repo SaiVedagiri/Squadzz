@@ -40,6 +40,7 @@ dependencies:
   google_sign_in: ^6.1.5
   http: ^1.1.0
   image_picker: ^1.0.4
+  date_time_picker: "^2.1.0"
 
 dev_dependencies:
   flutter_test:
