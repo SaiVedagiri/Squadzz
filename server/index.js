@@ -460,4 +460,21 @@ express()
     res.sendStatus(200);
 
   })
+  .post("/fetchCoord", async function(req, res) {
+      const spawn = require("child_process").spawn;
+      const pythonProcess = spawn('python', ["../python/getCoord.py", addressFROMREQ]);
+
+        let lat;
+        let long;
+
+      pythonProcess.stdout.on('data', (data) => {
+        lat = data[0],
+        long = data[1]
+      });
+
+      res.send({
+        latitude: lat,
+        longitude: long,
+      });
+  })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
