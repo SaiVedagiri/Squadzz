@@ -482,13 +482,21 @@ express()
 
     var url = BASE_URL + address + "&key=" + GOOGLE_MAPS_Api_KEY;
 
+    let lat;
+    let long;
+
     request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            res.json(body);
+            lat = body.results[0].geometry.location.lat,
+            long = body.results[0].geometry.location.lng
         }
         else {
             // The request failed, handle it
         }
+    });
+    res.send({
+      latitude: lat,
+      longitude: long,
     });
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
