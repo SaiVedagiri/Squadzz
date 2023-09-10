@@ -121,6 +121,9 @@ if __name__ == "__main__":
             totalTimes.append(sumTime)
             if sumTime < minTime:
                 minTime = sumTime
+                bestLoc = midpoint
+                bestDistances = distances
+                bestPrettyTimes = prettyTimes
 
             print(prettyTimes)
             print(distances)
@@ -130,12 +133,12 @@ if __name__ == "__main__":
         print(totalTimes)
     elif (n > 2):
         # reverse kansas
-        new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
-        new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+        new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/25
+        new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/25
 
         while (coorInOcean((new_latitude, new_longitude))):
-            new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
-            new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+            new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/25
+            new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/25
             
         
         minTime = 10000000000
@@ -152,15 +155,15 @@ if __name__ == "__main__":
             times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
             prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
             distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
-            
+
             longestTime = times.index(max(times))
             longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
             
             print(longestTime, longestPlace, longestDistance)
             print()
 
-            new_latitude = new_latitude[0] + (longestCoord[0]-new_latitude[0])/25
-            new_longitude = new_longitude[1] + (longestCoord[1]-new_longitude[1])/25
+            new_latitude = new_latitude + (longestCoord[0]-new_latitude)/25
+            new_longitude = new_longitude + (longestCoord[1]-new_longitude)/25
 
             print(new_latitude, new_longitude)
             print()
@@ -169,6 +172,9 @@ if __name__ == "__main__":
             totalTimes.append(sumTime)
             if sumTime < minTime:
                 minTime = sumTime
+                bestLoc = midpoint
+                bestDistances = distances
+                bestPrettyTimes = prettyTimes
 
             print(prettyTimes)
             print(distances)
@@ -182,19 +188,29 @@ if __name__ == "__main__":
         minTime = 10000000000
         totalTimes = []
 
-        perp_vector = (-(coords[0][1]-coords[1][1]), coords[0][0]-coords[1][0])
+        diff = (coords[0][0] - coords[1][0], coords[0][1] - coords[1][1])
+        perp_vector = (-diff[1], diff[0])
+        print(perp_vector)
+        print()
         kansas_vector = (kansasCoord[0]-midpointCoord[0],kansasCoord[1]-midpointCoord[1])
         dot_prod = (perp_vector[0] * kansas_vector[0]) + (perp_vector[1] * kansas_vector[1])
+        print(dot_prod)
 
         if (dot_prod < 0):
             perp_vector = (-perp_vector[0], -perp_vector[1])
+        mag = (perp_vector[0] ** 2 + perp_vector[1] ** 2) ** 0.5
+        perp_vector = (perp_vector[0] / mag, perp_vector[1] / mag)
+        print(perp_vector)
+
+        print("HERE")
+        print(perp_vector[0] * diff[0] + perp_vector[1] * diff[1])
         
-        new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
-        new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+        new_latitude = midpointCoord[0] + (perp_vector[0]*10)/25
+        new_longitude = midpointCoord[1] + (perp_vector[1]*10)/25
 
         while (coorInOcean((new_latitude, new_longitude))):
-            new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
-            new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+            new_latitude = midpointCoord[0] + (perp_vector[0])/25
+            new_longitude = midpointCoord[1] + (perp_vector[1])/25
 
         for i in range(10):
             midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
@@ -214,8 +230,8 @@ if __name__ == "__main__":
             print(longestTime, longestPlace, longestDistance)
             print()
 
-            new_latitude = new_latitude[0] + (longestCoord[0]-new_latitude[0])/25
-            new_longitude = new_longitude[1] + (longestCoord[1]-new_longitude[1])/25
+            new_latitude = new_latitude + (perp_vector[0])/20
+            new_longitude = new_longitude + (perp_vector[1])/20
 
             print(new_latitude, new_longitude)
             print()
@@ -224,10 +240,18 @@ if __name__ == "__main__":
             totalTimes.append(sumTime)
             if sumTime < minTime:
                 minTime = sumTime
+                bestLoc = midpoint
+                bestDistances = distances
+                bestPrettyTimes = prettyTimes
+
 
             print(prettyTimes)
             print(distances)
             print(end='\n\n\n\n')
 
-        print(minTime)
-        print(totalTimes)
+    print("FINAL SOLUTION")
+    print(minTime)
+    print(bestLoc)
+    print(bestDistances)
+    print(bestPrettyTimes)
+    # print(totalTimes)
