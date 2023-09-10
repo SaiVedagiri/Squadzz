@@ -60,7 +60,8 @@ def findMidpoint(addresses: list[str], coords: list[tuple]) -> str:
 
 if __name__ == "__main__":
 
-    addresses = ['21 W Clarke Ave, Milford, DE 19963', '140 Main St, Cedarville, NJ 08311']
+    # addresses = ['21 W Clarke Ave, Milford, DE 19963', '140 Main St, Cedarville, NJ 08311']
+    addresses = ['7301-7399 NW 14th Ave, Miami, FL 33147', 'Center St, Bangor, ME']
     coords = [getCoords(ad) for ad in addresses]
 
     n = len(addresses)
@@ -137,8 +138,8 @@ if __name__ == "__main__":
         new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/25
 
         while (coorInOcean((new_latitude, new_longitude))):
-            new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/25
-            new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/25
+            new_latitude += (kansasCoord[0]-midpointCoord[0])/25
+            new_longitude += (kansasCoord[1]-midpointCoord[1])/25
             
         
         minTime = 10000000000
@@ -205,12 +206,12 @@ if __name__ == "__main__":
         print("HERE")
         print(perp_vector[0] * diff[0] + perp_vector[1] * diff[1])
         
-        new_latitude = midpointCoord[0] + (perp_vector[0]*10)/25
-        new_longitude = midpointCoord[1] + (perp_vector[1]*10)/25
+        new_latitude = midpointCoord[0] + (perp_vector[0])/25
+        new_longitude = midpointCoord[1] + (perp_vector[1])/25
 
         while (coorInOcean((new_latitude, new_longitude))):
-            new_latitude = midpointCoord[0] + (perp_vector[0])/25
-            new_longitude = midpointCoord[1] + (perp_vector[1])/25
+            new_latitude += (perp_vector[0])/25
+            new_longitude += (perp_vector[1])/25
 
         for i in range(10):
             midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
