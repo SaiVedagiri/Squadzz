@@ -8,6 +8,14 @@ import 'package:squadzz/pages/group_create.dart';
 
 String userID = "";
 
+List<ImageDetails> _images = [
+  ImageDetails(
+    imagePath: 'images/1.jpg',
+    trip: 'Trip to Philly',
+    usersInPic: 'Shri'
+  ),
+]
+
 class PhotoLandingPage extends StatefulWidget {
   const PhotoLandingPage({Key? key}) : super(key: key);
 
@@ -74,6 +82,10 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
       DeviceOrientation.portraitDown,
     ]);
 
+    final List<Album> imageAlbums = await PhotoGallery.listAlbums();
+    final MediaPage imagePage = await imageAlbum.listMedia();
+    final List<Medium> allMedia = [ ...imagePage.items ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Squadzz Photos"),
@@ -135,28 +147,91 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
           ],
         ),
       ),
-      body: const Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: SafeArea(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[],
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            SizedBox(
+              height: 40,
+            ),
+            Text(
+              'Gallery',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 30,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    return RawMaterialButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(
+                              imagePath: _images[index].imagePath,
+                              trip: _images[index].trip,
+                              usersInPic: _images[index].usersInPic,
+                              index: index,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Hero(
+                        tag: 'logo$index',
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            image: DecorationImage(
+                              image: AssetImage(_images[index].imagePath),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: _images.length,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
   }
+}
+
+class ImageDetails {
+  final String imagePath;
+  final String trip;
+  final String[] usersInPic;
+  ImageDetails({
+    @required this.imagePath,
+    @required this.trip,
+    @required this.usersInPic,
+  });
 }
