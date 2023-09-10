@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 String userID = "";
 String name = "";
 int currFields = 1;
-List<String> emails = [""];
+ List<String> emails = [""];
 
 class GroupCreatePage extends StatefulWidget {
   const GroupCreatePage({Key? key}) : super(key: key);

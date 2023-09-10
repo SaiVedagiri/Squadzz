@@ -151,10 +151,8 @@ class _SignInPageState extends State<SignInPage> {
                             "Content-type": "application/json",
                             "Origin": "*",
                           },
-                          body: jsonEncode({
-                            "email": username,
-                            "password": password
-                          }));
+                          body: jsonEncode(
+                              {"email": username, "password": password}));
                       //createAlertDialog(context);
                       var userJSON = jsonDecode(response.body);
                       if (userJSON["data"] != "Incorrect email address." &&

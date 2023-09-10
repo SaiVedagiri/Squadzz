@@ -4,21 +4,21 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:squadzz/pages/group_create.dart';
+// import 'package:squadzz/pages/trip_create.dart';
 
 String userID = "";
 List<dynamic> displayList = [];
 
-class GroupLandingPage extends StatefulWidget {
-  const GroupLandingPage({Key? key}) : super(key: key);
+class TripLandingPage extends StatefulWidget {
+  const TripLandingPage({Key? key}) : super(key: key);
 
   @override
-  State<GroupLandingPage> createState() {
-    return _GroupLandingPageState();
+  State<TripLandingPage> createState() {
+    return _TripLandingPageState();
   }
 }
 
-class _GroupLandingPageState extends State<GroupLandingPage> {
+class _TripLandingPageState extends State<TripLandingPage> {
   @override
   initState() {
     super.initState();
@@ -28,7 +28,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
   initStateFunction() async {
     var prefs = await SharedPreferences.getInstance();
     userID = prefs.getString('userID')!;
-    Response response = await post(Uri.parse('http://www.squadzz.us/getGroups'),
+    Response response = await post(Uri.parse('http://www.squadzz.us/getTrips'),
         headers: {
           "Content-type": "application/json",
           "Origin": "*",
@@ -36,7 +36,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
         body: jsonEncode({"userID": userID}));
     var responseJSON = jsonDecode(response.body);
     setState(() {
-      displayList = responseJSON["groups"];
+      displayList = responseJSON["trips"];
     });
   }
 
@@ -87,13 +87,13 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Squadzz Groups"),
+        title: const Text("Squadzz Trips"),
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () async {
                 Response response =
-                    await post(Uri.parse('http://www.squadzz.us/getGroups'),
+                    await post(Uri.parse('http://www.squadzz.us/getTrips'),
                         headers: {
                           "Content-type": "application/json",
                           "Origin": "*",
@@ -101,7 +101,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                         body: jsonEncode({"userID": userID}));
                 var responseJSON = jsonDecode(response.body);
                 setState(() {
-                  displayList = responseJSON["groups"];
+                  displayList = responseJSON["trips"];
                 });
               }),
           IconButton(
@@ -114,7 +114,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                       TextSpan(
                         children: <TextSpan>[
                           TextSpan(
-                            text: 'Squadzz Groups\n',
+                            text: 'Squadzz Trips\n',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                           ),
                           TextSpan(
                             text:
-                                'This screen will allow you to view your groups and access your group chats. Press the refresh icon to see newly added groups.\n',
+                                'This screen will allow you to view your trips and access all related details. Press the refresh icon to see newly created trips.\n',
                             style: TextStyle(fontSize: 20),
                           ),
                         ],
@@ -133,11 +133,10 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const GroupCreatePage()));
-          // Add your onPressed code here!
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => const TripCreatePage()));
         },
-        child: const Icon(Icons.chat),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -146,13 +145,13 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.group),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/groups");
+              },
             ),
             IconButton(
               icon: const Icon(Icons.travel_explore),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, "/trips");
-              },
+              onPressed: () {},
             ),
             IconButton(
               icon: const Icon(Icons.image),
@@ -188,18 +187,15 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                           super.dispose();
                         }
 
-                        // TODO: Navigate to group chat
+                        // TODO: Navigate to trip details
                         // Navigator.push(
                         //     context,
                         //     MaterialPageRoute(
-                        //         builder: (context) => GroupChatPage(
-                        //             groupID: displayList[index]["id"])));
+                        //         builder: (context) => TripDetailPage(
+                        //             tripID: displayList[index]["id"])));
                       },
-                      leading: const CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/gc.png'),
-                      ),
                       title: Text(displayList[index]["name"]!),
-                      subtitle: const Text("lastMessage")),
+                      subtitle: const Text("Details")),
                 ));
           }),
     );

@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
     initStateFunction();
   }
 
-
   initStateFunction() async {
     var prefs = await SharedPreferences.getInstance();
     String userID = prefs.getString('userID')!;
@@ -77,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           TextSpan(
                             text:
-                            'Use this feature to log in to an existing account.\n',
+                                'Use this feature to log in to an existing account.\n',
                             style: TextStyle(fontSize: 20),
                           ),
                           TextSpan(
@@ -171,5 +170,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

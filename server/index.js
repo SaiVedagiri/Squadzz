@@ -223,30 +223,6 @@ express()
       groups: retVal,
     });
   })
-  .post("/checkForUser", async function (req, res) {
-    res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-    );
-    let info = req.body;
-    let email = info.email;
-    let myVal = await database
-      .ref("users")
-      .orderByChild("email")
-      .equalTo(email)
-      .once("value");
-    myVal = myVal.val();
-    if (!myVal) {
-      res.send({
-        data: false,
-      });
-    } else {
-      res.send({
-        data: true,
-      });
-    }
-  })
   .post("/createGroup", async function (req, res) {
     res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
     res.setHeader(
@@ -300,6 +276,137 @@ express()
         database.ref(`users/${userID}/groups`).set(myVal);
       }
     }
+
+    res.sendStatus(200);
+  })
+  .post("/checkForUser", async function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+    let info = req.body;
+    let email = info.email;
+    let myVal = await database
+      .ref("users")
+      .orderByChild("email")
+      .equalTo(email)
+      .once("value");
+    myVal = myVal.val();
+    if (!myVal) {
+      res.send({
+        data: false,
+      });
+    } else {
+      res.send({
+        data: true,
+      });
+    }
+  })
+  .post("/getTrips", async function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+    let userID = req.body.userID;
+    let myVal = await database.ref(`users/${userID}/trips`).once("value");
+    myVal = myVal.val();
+    retVal = [];
+
+    if (myVal) {
+      for (tripID of myVal) {
+        let tripName = await database
+          .ref(`trips/${tripID}/name`)
+          .once("value");
+        retVal.push({
+          id: tripID,
+          name: tripName,
+        });
+      }
+    }
+
+    res.send({
+      groups: retVal,
+    });
+  })
+  .post("/createTrip", async function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+    let info = req.body;
+    let userID = info.userID;
+    let tripName = info.tripName;
+    let memberInfo = info.memberInfo;
+    let groupIDs = info.groupIDs;
+
+    const value = {
+      name: groupName,
+      users: [userID],
+    };
+
+    for (member in memberInfo) {
+      let myVal = await database
+        .ref(`users`)
+        .orderByChild("email")
+        .equalTo(memberInfo[member])
+        .once("value");
+      myVal = myVal.val();
+      if (myVal == null) {
+        res.sendStatus(400);
+        return;
+      } else {
+        for (key in myVal) {
+          value.users.push(key);
+        }
+      }
+    }
+
+    let newKey = "";
+
+    database
+      .ref("groups")
+      .push(value)
+      .then((snapshot) => {
+        newKey = snapshot.key;
+      });
+
+    for (userID of value.users) {
+      let myVal = await database.ref(`users/${userID}/groups`).once("value");
+      myVal = myVal.val();
+
+      if (myVal == null) {
+        database.ref(`users/${userID}/groups`).set([newKey]);
+      } else {
+        myVal.push(newKey);
+        database.ref(`users/${userID}/groups`).set(myVal);
+      }
+    }
+
+    res.sendStatus(200);
+  })
+  .post("/fetchPOIData", async function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+
+    let info = req.body;
+    let latitude = info.latitude;
+
+    // rushi's code here: //todo please populate the two variables below
+    let best_lat = 0;
+    let best_long = 0;
+
+    // getting the place ids
+    const spawn = require("child_process").spawn;
+    const pythonProcess = spawn('python', ["../python/find_place_ids.py", best_lat, best_long, "temp/place_ids.txt", 1000]);
+
+    // collect place_ids from temp/place_ids.txt
+    
 
     res.sendStatus(200);
   })

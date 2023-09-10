@@ -7,18 +7,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:squadzz/pages/group_create.dart';
 
 String userID = "";
-List<dynamic> displayList = [];
 
-class GroupLandingPage extends StatefulWidget {
-  const GroupLandingPage({Key? key}) : super(key: key);
+class PhotoLandingPage extends StatefulWidget {
+  const PhotoLandingPage({Key? key}) : super(key: key);
 
   @override
-  State<GroupLandingPage> createState() {
-    return _GroupLandingPageState();
+  State<PhotoLandingPage> createState() {
+    return _PhotoLandingPageState();
   }
 }
 
-class _GroupLandingPageState extends State<GroupLandingPage> {
+class _PhotoLandingPageState extends State<PhotoLandingPage> {
   @override
   initState() {
     super.initState();
@@ -28,16 +27,6 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
   initStateFunction() async {
     var prefs = await SharedPreferences.getInstance();
     userID = prefs.getString('userID')!;
-    Response response = await post(Uri.parse('http://www.squadzz.us/getGroups'),
-        headers: {
-          "Content-type": "application/json",
-          "Origin": "*",
-        },
-        body: jsonEncode({"userID": userID}));
-    var responseJSON = jsonDecode(response.body);
-    setState(() {
-      displayList = responseJSON["groups"];
-    });
   }
 
   Future createAlertDialog(BuildContext context, String title, String body) {
@@ -87,23 +76,8 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Squadzz Groups"),
+        title: const Text("Squadzz Photos"),
         actions: <Widget>[
-          IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () async {
-                Response response =
-                    await post(Uri.parse('http://www.squadzz.us/getGroups'),
-                        headers: {
-                          "Content-type": "application/json",
-                          "Origin": "*",
-                        },
-                        body: jsonEncode({"userID": userID}));
-                var responseJSON = jsonDecode(response.body);
-                setState(() {
-                  displayList = responseJSON["groups"];
-                });
-              }),
           IconButton(
               icon: const Icon(Icons.help),
               onPressed: () async {
@@ -114,7 +88,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                       TextSpan(
                         children: <TextSpan>[
                           TextSpan(
-                            text: 'Squadzz Groups\n',
+                            text: 'Squadzz Photos\n',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -122,7 +96,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                           ),
                           TextSpan(
                             text:
-                                'This screen will allow you to view your groups and access your group chats. Press the refresh icon to see newly added groups.\n',
+                                'This screen will allow you to view all of your saved photos in one convenient place.\n',
                             style: TextStyle(fontSize: 20),
                           ),
                         ],
@@ -131,14 +105,6 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
               }),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const GroupCreatePage()));
-          // Add your onPressed code here!
-        },
-        child: const Icon(Icons.chat),
-      ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -146,7 +112,9 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.group),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/groups");
+              },
             ),
             IconButton(
               icon: const Icon(Icons.travel_explore),
@@ -156,9 +124,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
             ),
             IconButton(
               icon: const Icon(Icons.image),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, "/photos");
-              },
+              onPressed: () {},
             ),
             IconButton(
               icon: const Icon(Icons.settings),
@@ -169,39 +135,28 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
           ],
         ),
       ),
-      body: ListView.builder(
-          itemCount: displayList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
-                child: Card(
-                  child: ListTile(
-                      onTap: () {
-                        dispose() {
-                          SystemChrome.setPreferredOrientations([
-                            DeviceOrientation.landscapeRight,
-                            DeviceOrientation.landscapeLeft,
-                            DeviceOrientation.portraitUp,
-                            DeviceOrientation.portraitDown,
-                          ]);
-                          super.dispose();
-                        }
-
-                        // TODO: Navigate to group chat
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => GroupChatPage(
-                        //             groupID: displayList[index]["id"])));
-                      },
-                      leading: const CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/gc.png'),
-                      ),
-                      title: Text(displayList[index]["name"]!),
-                      subtitle: const Text("lastMessage")),
-                ));
-          }),
+      body: const Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[],
+        ),
+      ),
     );
   }
 }
