@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const path = require("path");
 var bodyParser = require("body-parser");
 var admin = require("firebase-admin");
+const { getStorage, getDownloadURL } = require('firebase-admin/storage');
 var serviceAccount = require("./" + process.env.FIREBASE_FILE);
 const PORT = process.env.PORT || 80;
 
@@ -421,7 +422,48 @@ express()
       const pythonProcess = spawn('python', ["..python/get_place_info.py", line]);
     }
     
+    res.sendStatus(200);
+  })
+  .post("/uploadImage", async function(req, res) {
+    // var defaultStorage = firebase.storage();
+    const bucket = getStorage().bucket('squadzz.appspot.com');
+
+
+    
+    //FOR LOOP THROUGH MULTIPLE IMAGES
+
+
+
+    const blob = bucket.file(req);
+    const blobStream = blob.createWriteStream({
+      resumable: false,
+    });
+
+    blobStream.on("error", (err) => {
+      res.status(500).send({ message: err.message });
+    });
+
+    let publicUrl;
+
+    blobStream.on("finish", async (data) => {
+      // Create URL for directly file access via HTTP.
+      publicUrl = format(
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+      );
+
+      // Make the file public
+      await bucket.file(req.file.originalname).makePublic();
+
+      // todo add url for firebase
+      // database[]
+
+    }) 
+
+    // adding uploaded pictures to the correct cluster
+    const spawn = require("child_process").spawn;
+    const pythonProcess = spawn('python', ["../python/face_req.py", publicUrl, tripID]);
 
     res.sendStatus(200);
+
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
