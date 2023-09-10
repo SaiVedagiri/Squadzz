@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:image/comps/widgets.dart';
+import 'package:squadzz/comps/widgets.dart';
 
-import '../chatpage.dart';
+import '../pages/group_chat.dart';
 
 class AnimatedDialog extends StatefulWidget {
   final double height;

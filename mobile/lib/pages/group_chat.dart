@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:image/comps/styles.dart';
-import 'package:image/comps/widgets.dart';
+import 'package:squadzz/comps/styles.dart';
+import 'package:squadzz/comps/widgets.dart';
 
 class ChatPage extends StatelessWidget {
   final String id;

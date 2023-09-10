@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:image/comps/animated-dialog.dart';
-import 'package:image/comps/styles.dart';
+import 'package:squadzz/comps/animated-dialog.dart';
+import 'package:squadzz/comps/styles.dart';
 
 class ChatWidgets {
   static Widget card({title, time, subtitle, onTap}) {
