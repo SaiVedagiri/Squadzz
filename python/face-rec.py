@@ -4,7 +4,9 @@ import face_recognition
 import faiss
 import argparse
 import numpy as np
+import firebase_admin
 from urllib.request import urlretrieve
+from firebase_admin import db
 from google.cloud import vision
 
 parser = argparse.ArgumentParser()
@@ -78,9 +80,6 @@ for i in range(len(faces)):
 
     predictionNames.append(names[I[0][0]])
 
-import firebase_admin
-from firebase_admin import db
-
 trip_id = args.trip_id[0]
 
 cred_obj = firebase_admin.credentials.Certificate('firebase.json')
@@ -90,10 +89,4 @@ default_app = firebase_admin.initialize_app(cred_obj, {
 
 ref = db.reference("/trips/" + trip_id + "/photos")
 
-# print(ref.get())
-
 ref.push({"url": args.image_path[0], "people": predictionNames})
-
-# ref.set([{"url": args.image_path[0], "people": predictionNames}])
-
-# print(ref.get())

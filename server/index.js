@@ -428,40 +428,34 @@ express()
     // var defaultStorage = firebase.storage();
     const bucket = getStorage().bucket('squadzz.appspot.com');
 
+    for (let i = 0; i < req.body.images.length; i++) {
+      
+      const blob = bucket.file(req);
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+      });
 
-    
-    //FOR LOOP THROUGH MULTIPLE IMAGES
+      blobStream.on("error", (err) => {
+        res.status(500).send({ message: err.message });
+      });
 
+      let publicUrl;
 
+      blobStream.on("finish", async (data) => {
+        // Create URL for directly file access via HTTP.
+        publicUrl = format(
+          `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+        );
 
-    const blob = bucket.file(req);
-    const blobStream = blob.createWriteStream({
-      resumable: false,
-    });
+        // Make the file public
+        await bucket.file(req.file.originalname).makePublic();
 
-    blobStream.on("error", (err) => {
-      res.status(500).send({ message: err.message });
-    });
+      }) 
 
-    let publicUrl;
-
-    blobStream.on("finish", async (data) => {
-      // Create URL for directly file access via HTTP.
-      publicUrl = format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
-
-      // Make the file public
-      await bucket.file(req.file.originalname).makePublic();
-
-      // todo add url for firebase
-      // database[]
-
-    }) 
-
-    // adding uploaded pictures to the correct cluster
-    const spawn = require("child_process").spawn;
-    const pythonProcess = spawn('python', ["../python/face_req.py", publicUrl, tripID]);
+      // adding uploaded pictures to the correct cluster
+      const spawn = require("child_process").spawn;
+      const pythonProcess = spawn('python', ["../python/face_req.py", publicUrl, tripID]);
+    }
 
     res.sendStatus(200);
 
