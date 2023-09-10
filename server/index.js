@@ -480,7 +480,7 @@ express()
 
     var address = fromreq;
 
-    var url = BASE_URL + address + "&key=" + GOOGLE_MAPS_Api_KEY;
+    var url = BASE_URL + address + "&key=" + process.env.GOOGLE_MAPS_Api_KEY;
 
     let lat;
     let long;
@@ -489,9 +489,6 @@ express()
         if (!error && response.statusCode == 200) {
             lat = body.results[0].geometry.location.lat,
             long = body.results[0].geometry.location.lng
-        }
-        else {
-            // The request failed, handle it
         }
     });
     res.send({
