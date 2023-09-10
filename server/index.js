@@ -207,6 +207,7 @@ express()
     let userID = req.body.userID;
     let myVal = await database.ref(`users/${userID}/groups`).once("value");
     myVal = myVal.val();
+    console.log(myVal);
     retVal = [];
 
     if (myVal) {
@@ -215,6 +216,7 @@ express()
           .ref(`groups/${groupID}`)
           .once("value");
         group = group.val();
+        console.log(group);
         group["id"] = groupID;
         retVal.push(group);
       }
@@ -474,40 +476,40 @@ express()
     res.sendStatus(200);
 
   })
-  .post("/getLatLong", async function(req, res) {
-    //   const spawn = require("child_process").spawn;
-    //   const pythonProcess = spawn('python3', ["../python/getCoord.py", addressFROMREQ]);
+  // .post("/getLatLong", async function(req, res) {
+  //   //   const spawn = require("child_process").spawn;
+  //   //   const pythonProcess = spawn('python3', ["../python/getCoord.py", addressFROMREQ]);
 
-    //   let lat;
-    //   let long;
+  //   //   let lat;
+  //   //   let long;
 
-    //   pythonProcess.stdout.on('data', (data) => {
-    //     lat = data[0],
-    //     long = data[1]
-    //   });
+  //   //   pythonProcess.stdout.on('data', (data) => {
+  //   //     lat = data[0],
+  //   //     long = data[1]
+  //   //   });
 
-    //   res.send({
-    //     latitude: lat,
-    //     longitude: long,
-    //   });
-    var BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+  //   //   res.send({
+  //   //     latitude: lat,
+  //   //     longitude: long,
+  //   //   });
+  //   var BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
-    var address = fromreq;
+  //   var address = req.body.address;
 
-    var url = BASE_URL + address + "&key=" + process.env.GOOGLE_MAPS_Api_KEY;
+  //   var url = BASE_URL + address + "&key=" + process.env.GOOGLE_MAPS_Api_KEY;
 
-    let lat;
-    let long;
+  //   let lat;
+  //   let long;
 
-    request(url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            lat = body.results[0].geometry.location.lat,
-            long = body.results[0].geometry.location.lng
-        }
-    });
-    res.send({
-      latitude: lat,
-      longitude: long,
-    });
-  })
+  //   request(url, function (error, response, body) {
+  //       if (!error && response.statusCode == 200) {
+  //           lat = body.results[0].geometry.location.lat,
+  //           long = body.results[0].geometry.location.lng
+  //       }
+  //   });
+  //   res.send({
+  //     latitude: lat,
+  //     longitude: long,
+  //   });
+  // })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));

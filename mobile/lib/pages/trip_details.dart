@@ -30,8 +30,8 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
   late GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   late BitmapDescriptor pinLocation;
-  double latitude = 0;
-  double longitude = 0;
+  double latitude = 40.3086875;
+  double longitude = -74.6535625;
 
   @override
   initState() {
