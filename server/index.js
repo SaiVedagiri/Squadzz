@@ -410,7 +410,7 @@ express()
 
     // getting the place ids
     const spawn = require("child_process").spawn;
-    const pythonProcess = spawn('python', ["../python/find_place_ids.py", best_lat, best_long, "temp/place_ids.txt", 1000]);
+    const pythonProcess = spawn('python3', ["../python/find_place_ids.py", best_lat, best_long, "temp/place_ids.txt", 1000]);
 
     // collect place_ids from temp/place_ids.txt
     // const pids = [];
@@ -419,7 +419,7 @@ express()
     for (const line of lines) {
       // pids.push(data);
       // get info for each place
-      const pythonProcess = spawn('python', ["..python/get_place_info.py", line]);
+      const pythonProcess = spawn('python3', ["..python/get_place_info.py", line]);
     }
     
     res.sendStatus(200);
@@ -454,7 +454,7 @@ express()
 
       // adding uploaded pictures to the correct cluster
       const spawn = require("child_process").spawn;
-      const pythonProcess = spawn('python', ["../python/face_req.py", publicUrl, tripID]);
+      const pythonProcess = spawn('python3', ["../python/face_req.py", publicUrl, tripID]);
     }
 
     res.sendStatus(200);
@@ -462,10 +462,10 @@ express()
   })
   .post("/fetchCoord", async function(req, res) {
       const spawn = require("child_process").spawn;
-      const pythonProcess = spawn('python', ["../python/getCoord.py", addressFROMREQ]);
+      const pythonProcess = spawn('python3', ["../python/getCoord.py", addressFROMREQ]);
 
-        let lat;
-        let long;
+      let lat;
+      let long;
 
       pythonProcess.stdout.on('data', (data) => {
         lat = data[0],
