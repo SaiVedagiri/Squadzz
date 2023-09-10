@@ -328,7 +328,7 @@ express()
     }
 
     res.send({
-      groups: retVal,
+      trips: retVal,
     });
   })
   .post("/createTrip", async function (req, res) {
