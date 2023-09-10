@@ -59,8 +59,6 @@ def findMidpoint(addresses: list[str], coords: list[tuple]) -> str:
 
     return midpoint, getAddress(midpoint)
 
-
-
 if __name__ == "__main__":
 
     addresses = ["5 N Front St, Allentown, PA 18102", "364 Palisade Avenue, Cliffside Park, NJ", "3330 Walnut Street, Philadelphia, PA", "54 Parry Drive, Hainesport, NJ", "3201 Cricket Circle, Edison, NJ"]
@@ -69,46 +67,14 @@ if __name__ == "__main__":
     n = len(addresses)
 
     midpointCoord, midpoint = findMidpoint(addresses, coords)
+    kansasCoord = (39.809995, -98.555394)
 
     print(midpointCoord)
     print()
 
     # print([getDistance(midpointCoord, getCoords(ad)) for ad in addresses])
 
-    matrix = getDistanceMatrix([midpoint], addresses)
-
-    print(matrix)
-    print()
-
-    times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
-    prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
-    distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
-
-    print(prettyTimes)
-    print(distances)
-    print()
-
-    minTime = 10000000000
-    totalTimes = []
-
-    for i in range(10):
-        longestTime = times.index(max(times))
-        longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
-        
-        print(longestTime, longestPlace, longestDistance)
-        print()
-
-        new_latitude = midpointCoord[0] + (longestCoord[0]-midpointCoord[0])/25
-        new_longitude = midpointCoord[1] + (longestCoord[1]-midpointCoord[1])/25
-
-        # new_latitude = midpointCoord[0] + ((longestDistance/50000) / R) * (180 / math.pi)
-        # new_longitude = midpointCoord[1] + ((longestDistance/50000) / R) * (180 / math.pi) / math.cos(midpointCoord[0] * math.pi/180)
-
-        print(new_latitude, new_longitude)
-        print()
-
-        midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
-
+    if (not coorInOcean(midpointCoord[0],midpointCoord[1])):
         matrix = getDistanceMatrix([midpoint], addresses)
 
         print(matrix)
@@ -118,14 +84,150 @@ if __name__ == "__main__":
         prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
         distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
 
-        sumTime = sum(times)/60
-        totalTimes.append(sumTime)
-        if sumTime < minTime:
-            minTime = sumTime
-
         print(prettyTimes)
         print(distances)
-        print(end='\n\n\n\n')
+        print()
 
-    print(minTime)
-    print(totalTimes)
+        minTime = 10000000000
+        totalTimes = []
+
+        for i in range(10):
+            longestTime = times.index(max(times))
+            longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
+            
+            print(longestTime, longestPlace, longestDistance)
+            print()
+
+            new_latitude = midpointCoord[0] + (longestCoord[0]-midpointCoord[0])/25
+            new_longitude = midpointCoord[1] + (longestCoord[1]-midpointCoord[1])/25
+
+            # new_latitude = midpointCoord[0] + ((longestDistance/50000) / R) * (180 / math.pi)
+            # new_longitude = midpointCoord[1] + ((longestDistance/50000) / R) * (180 / math.pi) / math.cos(midpointCoord[0] * math.pi/180)
+
+            print(new_latitude, new_longitude)
+            print()
+
+            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
+
+            matrix = getDistanceMatrix([midpoint], addresses)
+
+            print(matrix)
+            print()
+
+            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
+
+            sumTime = sum(times)/60
+            totalTimes.append(sumTime)
+            if sumTime < minTime:
+                minTime = sumTime
+
+            print(prettyTimes)
+            print(distances)
+            print(end='\n\n\n\n')
+
+        print(minTime)
+        print(totalTimes)
+    elif (n > 2):
+        # reverse kansas
+        new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
+        new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+
+        while (coorInOcean((new_latitude, new_longitude))):
+            new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
+            new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+        
+        minTime = 10000000000
+        totalTimes = []
+
+        for i in range(10):
+            longestTime = times.index(max(times))
+            longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
+            
+            print(longestTime, longestPlace, longestDistance)
+            print()
+
+            new_latitude = new_latitude[0] + (longestCoord[0]-new_latitude[0])/25
+            new_longitude = new_longitude[1] + (longestCoord[1]-new_longitude[1])/25
+
+            print(new_latitude, new_longitude)
+            print()
+
+            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
+
+            matrix = getDistanceMatrix([midpoint], addresses)
+
+            print(matrix)
+            print()
+
+            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
+
+            sumTime = sum(times)/60
+            totalTimes.append(sumTime)
+            if sumTime < minTime:
+                minTime = sumTime
+
+            print(prettyTimes)
+            print(distances)
+            print(end='\n\n\n\n')
+
+        print(minTime)
+        print(totalTimes)
+    else:
+        # perpendicular
+
+        minTime = 10000000000
+        totalTimes = []
+
+        perp_vector = (-(coords[0][1]-coords[1][1]), coords[0][0]-coords[1][0])
+        kansas_vector = (kansasCoord[0]-midpointCoord[0],kansasCoord[1]-midpointCoord[1])
+        dot_prod = (perp_vector[0] * kansas_vector[0]) + (perp_vector[1] * kansas_vector[1])
+
+        if (dot_prod < 0):
+            perp_vector = (-perp_vector[0], -perp_vector[1])
+        
+        new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
+        new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+
+        while (coorInOcean((new_latitude, new_longitude))):
+            new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
+            new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+
+        for i in range(10):
+            longestTime = times.index(max(times))
+            longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
+            
+            print(longestTime, longestPlace, longestDistance)
+            print()
+
+            new_latitude = new_latitude[0] + (longestCoord[0]-new_latitude[0])/25
+            new_longitude = new_longitude[1] + (longestCoord[1]-new_longitude[1])/25
+
+            print(new_latitude, new_longitude)
+            print()
+
+            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
+
+            matrix = getDistanceMatrix([midpoint], addresses)
+
+            print(matrix)
+            print()
+
+            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
+
+            sumTime = sum(times)/60
+            totalTimes.append(sumTime)
+            if sumTime < minTime:
+                minTime = sumTime
+
+            print(prettyTimes)
+            print(distances)
+            print(end='\n\n\n\n')
+
+        print(minTime)
+        print(totalTimes)
