@@ -1,4 +1,5 @@
 const dotenv = require("dotenv");
+const fs = require('fs');
 dotenv.config();
 
 const express = require("express");
@@ -406,6 +407,14 @@ express()
     const pythonProcess = spawn('python', ["../python/find_place_ids.py", best_lat, best_long, "temp/place_ids.txt", 1000]);
 
     // collect place_ids from temp/place_ids.txt
+    // const pids = [];
+    const file = fs.readFile('temp/place_ids.txt', 'utf8');
+    const lines = file.split('\n');
+    for (const line of lines) {
+      // pids.push(data);
+      // get info for each place
+      const pythonProcess = spawn('python', ["..python/get_place_info.py", line]);
+    }
     
 
     res.sendStatus(200);

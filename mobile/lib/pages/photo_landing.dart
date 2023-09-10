@@ -5,16 +5,19 @@ import 'dart:async';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:squadzz/pages/group_create.dart';
+import 'package:squadzz/pages/photo_details.dart';
+import 'package:image_picker/image_picker.dart';
 
 String userID = "";
+ImagePicker? picker;
 
 List<ImageDetails> _images = [
   ImageDetails(
     imagePath: 'images/1.jpg',
     trip: 'Trip to Philly',
-    usersInPic: 'Shri'
+    usersInPic: ['Shri']
   ),
-]
+];
 
 class PhotoLandingPage extends StatefulWidget {
   const PhotoLandingPage({Key? key}) : super(key: key);
@@ -35,6 +38,7 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
   initStateFunction() async {
     var prefs = await SharedPreferences.getInstance();
     userID = prefs.getString('userID')!;
+    picker = ImagePicker();
   }
 
   Future createAlertDialog(BuildContext context, String title, String body) {
@@ -82,9 +86,7 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
       DeviceOrientation.portraitDown,
     ]);
 
-    final List<Album> imageAlbums = await PhotoGallery.listAlbums();
-    final MediaPage imagePage = await imageAlbum.listMedia();
-    final List<Medium> allMedia = [ ...imagePage.items ];
+
 
     return Scaffold(
       appBar: AppBar(
@@ -147,11 +149,17 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final List<XFile>? image = await picker?.pickMultiImage();
+        },
+        child: const Icon(Icons.upload),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             Text(
@@ -228,10 +236,10 @@ class _PhotoLandingPageState extends State<PhotoLandingPage> {
 class ImageDetails {
   final String imagePath;
   final String trip;
-  final String[] usersInPic;
+  final List<String> usersInPic;
   ImageDetails({
-    @required this.imagePath,
-    @required this.trip,
-    @required this.usersInPic,
+    required this.imagePath,
+    required this.trip,
+    required this.usersInPic,
   });
 }
