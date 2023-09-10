@@ -87,7 +87,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Squadzz Groups"),
+        title: const Text("Squadzz"),
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.refresh),
