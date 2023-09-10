@@ -44,6 +44,7 @@ class _TripCreatePageState extends State<TripCreatePage> {
     var responseJSON = jsonDecode(response.body);
     setState(() {
       groupList = responseJSON["groups"];
+      groupNameList = [];
       for(var group in groupList){
         groupNameList.add(group["name"]);
         groupMapping[group["name"]] = group["id"];

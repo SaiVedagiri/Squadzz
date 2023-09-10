@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:squadzz/pages/trip_create.dart';
-// import 'package:squadzz/pages/trip_create.dart';
+import 'package:squadzz/pages/trip_details.dart';
 
 String userID = "";
 List<dynamic> displayList = [];
@@ -188,15 +188,14 @@ class _TripLandingPageState extends State<TripLandingPage> {
                           super.dispose();
                         }
 
-                        // TODO: Navigate to trip details
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => TripDetailPage(
-                        //             tripID: displayList[index]["id"])));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TripDetailsPage(
+                                    tripID: displayList[index]["id"])));
                       },
                       title: Text(displayList[index]["name"]!),
-                      subtitle: const Text("Location")),
+                      subtitle: Text(displayList[index]["location"]!)),
                 ));
           }),
     );

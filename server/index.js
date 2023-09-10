@@ -211,13 +211,12 @@ express()
 
     if (myVal) {
       for (groupID of myVal) {
-        let groupName = await database
-          .ref(`groups/${groupID}/name`)
+        let group = await database
+          .ref(`groups/${groupID}`)
           .once("value");
-        retVal.push({
-          id: groupID,
-          name: groupName,
-        });
+        group = group.val();
+        group["id"] = groupID;
+        retVal.push(group);
       }
     }
 
@@ -318,19 +317,34 @@ express()
 
     if (myVal) {
       for (tripID of myVal) {
-        let tripName = await database
-          .ref(`trips/${tripID}/name`)
+        let tripInfo = await database
+          .ref(`trips/${tripID}`)
           .once("value");
-        retVal.push({
-          id: tripID,
-          name: tripName,
-        });
+        tripInfo = tripInfo.val();
+        tripInfo["id"] = tripID;
+        retVal.push(tripInfo);
       }
     }
 
     res.send({
       trips: retVal,
     });
+  })
+  .post("/getTripData", async function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+    let tripID = req.body.tripID;
+    let myVal = await database.ref(`trips/${tripID}`).once("value");
+    let retVal = {"trip": myVal.val()};
+    for (userID of retVal.trip.users) {
+      let myVal = await database.ref(`users/${userID}`).once("value");
+      retVal[userID] = myVal.val();
+    }
+    
+    res.send(retVal);
   })
   .post("/createTrip", async function (req, res) {
     res.setHeader("Access-Control-Allow-Origin", "https://www.squadzz.us");
@@ -460,7 +474,7 @@ express()
     res.sendStatus(200);
 
   })
-  .post("/fetchCoord", async function(req, res) {
+  .post("/getLatLong", async function(req, res) {
     //   const spawn = require("child_process").spawn;
     //   const pythonProcess = spawn('python3', ["../python/getCoord.py", addressFROMREQ]);
 

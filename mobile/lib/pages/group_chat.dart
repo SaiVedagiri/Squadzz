@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:squadzz/comps/styles.dart';
 import 'package:squadzz/comps/widgets.dart';
 
-class ChatPage extends StatelessWidget {
+class GroupChatPage extends StatelessWidget {
   final String id;
-  const ChatPage({Key? key, required this.id}) : super(key: key);
+  const GroupChatPage({Key? key, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

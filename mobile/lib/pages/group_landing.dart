@@ -6,6 +6,8 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:squadzz/pages/group_create.dart';
 
+import 'group_chat.dart';
+
 String userID = "";
 List<dynamic> displayList = [];
 
@@ -37,6 +39,7 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
     var responseJSON = jsonDecode(response.body);
     setState(() {
       displayList = responseJSON["groups"];
+      print(displayList);
     });
   }
 
@@ -188,12 +191,11 @@ class _GroupLandingPageState extends State<GroupLandingPage> {
                           super.dispose();
                         }
 
-                        // TODO: Navigate to group chat
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => GroupChatPage(
-                        //             groupID: displayList[index]["id"])));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GroupChatPage(
+                                    id: displayList[index]["id"])));
                       },
                       leading: const CircleAvatar(
                         backgroundImage: AssetImage('assets/images/gc.png'),
