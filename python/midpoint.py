@@ -136,16 +136,23 @@ if __name__ == "__main__":
         while (coorInOcean((new_latitude, new_longitude))):
             new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
             new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
-
-        times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
-        prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
-        distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
             
         
         minTime = 10000000000
         totalTimes = []
 
         for i in range(10):
+            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
+
+            matrix = getDistanceMatrix([midpoint], addresses)
+
+            print(matrix)
+            print()
+
+            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
+            
             longestTime = times.index(max(times))
             longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
             
@@ -157,17 +164,6 @@ if __name__ == "__main__":
 
             print(new_latitude, new_longitude)
             print()
-
-            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
-
-            matrix = getDistanceMatrix([midpoint], addresses)
-
-            print(matrix)
-            print()
-
-            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
-            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
-            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
 
             sumTime = sum(times)/60
             totalTimes.append(sumTime)
@@ -200,12 +196,17 @@ if __name__ == "__main__":
             new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
             new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
 
-        times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
-        prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
-        distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
-            
-
         for i in range(10):
+            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
+
+            matrix = getDistanceMatrix([midpoint], addresses)
+
+            print(matrix)
+            print()
+
+            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
             
             longestTime = times.index(max(times))
             longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
@@ -218,17 +219,6 @@ if __name__ == "__main__":
 
             print(new_latitude, new_longitude)
             print()
-
-            midpointCoord, midpoint = (new_latitude, new_longitude), getAddress((new_latitude, new_longitude))
-
-            matrix = getDistanceMatrix([midpoint], addresses)
-
-            print(matrix)
-            print()
-
-            times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
-            prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
-            distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
 
             sumTime = sum(times)/60
             totalTimes.append(sumTime)
