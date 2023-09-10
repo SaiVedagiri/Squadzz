@@ -461,20 +461,34 @@ express()
 
   })
   .post("/fetchCoord", async function(req, res) {
-      const spawn = require("child_process").spawn;
-      const pythonProcess = spawn('python3', ["../python/getCoord.py", addressFROMREQ]);
+    //   const spawn = require("child_process").spawn;
+    //   const pythonProcess = spawn('python3', ["../python/getCoord.py", addressFROMREQ]);
 
-      let lat;
-      let long;
+    //   let lat;
+    //   let long;
 
-      pythonProcess.stdout.on('data', (data) => {
-        lat = data[0],
-        long = data[1]
-      });
+    //   pythonProcess.stdout.on('data', (data) => {
+    //     lat = data[0],
+    //     long = data[1]
+    //   });
 
-      res.send({
-        latitude: lat,
-        longitude: long,
-      });
+    //   res.send({
+    //     latitude: lat,
+    //     longitude: long,
+    //   });
+    var BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+
+    var address = fromreq;
+
+    var url = BASE_URL + address + "&key=" + GOOGLE_MAPS_Api_KEY;
+
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            res.json(body);
+        }
+        else {
+            // The request failed, handle it
+        }
+    });
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
