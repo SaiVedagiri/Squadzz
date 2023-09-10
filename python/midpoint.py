@@ -13,7 +13,6 @@ def getCoords(address: str) -> tuple:
 
     response = requests.get("https://maps.googleapis.com/maps/api/geocode/json", params={"address": address, "key": os.getenv("GOOGLE_MAPS_Api_KEY")})
     resp = response.json()
-
     return(resp["results"][0]["geometry"]["location"]["lat"], resp["results"][0]["geometry"]["location"]["lng"])
 
 
@@ -61,7 +60,7 @@ def findMidpoint(addresses: list[str], coords: list[tuple]) -> str:
 
 if __name__ == "__main__":
 
-    addresses = ["5 N Front St, Allentown, PA 18102", "364 Palisade Avenue, Cliffside Park, NJ", "3330 Walnut Street, Philadelphia, PA", "54 Parry Drive, Hainesport, NJ", "3201 Cricket Circle, Edison, NJ"]
+    addresses = ['21 W Clarke Ave, Milford, DE 19963', '140 Main St, Cedarville, NJ 08311']
     coords = [getCoords(ad) for ad in addresses]
 
     n = len(addresses)
@@ -74,7 +73,7 @@ if __name__ == "__main__":
 
     # print([getDistance(midpointCoord, getCoords(ad)) for ad in addresses])
 
-    if (not coorInOcean(midpointCoord[0],midpointCoord[1])):
+    if (not coorInOcean(midpointCoord)):
         matrix = getDistanceMatrix([midpoint], addresses)
 
         print(matrix)
@@ -137,6 +136,11 @@ if __name__ == "__main__":
         while (coorInOcean((new_latitude, new_longitude))):
             new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
             new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
+
+        times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+        prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+        distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
+            
         
         minTime = 10000000000
         totalTimes = []
@@ -196,7 +200,13 @@ if __name__ == "__main__":
             new_latitude = midpointCoord[0] + (kansasCoord[0]-midpointCoord[0])/100
             new_longitude = midpointCoord[1] + (kansasCoord[1]-midpointCoord[1])/100
 
+        times = [matrix["rows"][0]["elements"][i]["duration"]["value"] for i in range(n)]
+        prettyTimes = [matrix["rows"][0]["elements"][i]["duration"]["text"] for i in range(n)]
+        distances = [matrix["rows"][0]["elements"][i]["distance"]["value"] for i in range(n)]
+            
+
         for i in range(10):
+            
             longestTime = times.index(max(times))
             longestPlace, longestDistance, longestCoord = addresses[longestTime], distances[longestTime], coords[longestTime]
             
